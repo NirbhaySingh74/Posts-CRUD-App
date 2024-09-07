@@ -43,10 +43,18 @@ export const usePostsStore = create<PostsState>((set, get) => ({
   // Set the new post values
   setNewPost: (post) => set({ newPost: post }),
 
-  // Create a new post
+  // Create a new post with validation
   createPost: async (e: React.FormEvent) => {
     e.preventDefault();
     const { newPost, posts } = get();
+
+    // Check if title and body are provided
+    if (!newPost.title.trim() || !newPost.body.trim()) {
+      console.error("Title and body are required");
+      alert("Please fill in both the title and body before creating a post.");
+      return; // Stop execution if validation fails
+    }
+
     try {
       const response = await axios.post(
         "https://jsonplaceholder.typicode.com/posts",
